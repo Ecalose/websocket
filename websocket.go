@@ -8,8 +8,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"strings"
+
+	"net/http"
 
 	_ "unsafe"
 
