@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"strings"
 
 	"net/http"
@@ -248,11 +249,15 @@ func NewClientConn(resp *http.Response, options ...Option) (*Conn, error) {
 		option = GetHeaderOption(resp.Header, true)
 	}
 
-	rwc, ok := resp.Body.(io.ReadWriteCloser)
+	rwc, ok := resp.Body.(interface{ Conn() net.Conn })
 	if !ok {
-		return nil, fmt.Errorf("websocket new client 错误：response body is not a io.ReadWriteCloser")
+		rwc2, ok := resp.Body.(io.ReadWriteCloser)
+		if !ok {
+			return nil, fmt.Errorf("websocket new client 错误：response body is not a io.ReadWriteCloser")
+		}
+		return NewConn(rwc2, true, option), nil
 	}
-	return NewConn(rwc, true, option), nil
+	return NewConn(rwc.Conn(), true, option), nil
 }
 
 func NewServerConn(w http.ResponseWriter, r *http.Request, options ...Option) (_ *Conn, err error) {
