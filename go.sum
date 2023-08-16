@@ -1,9 +1,9 @@
-gitee.com/baixudong/kinds v0.0.0-20230726070402-0bc6b1ebb086 h1:kV4sCkI5U06OslCLT6IaNJM3uG8m6GUpyM8gjMh2V8I=
-gitee.com/baixudong/kinds v0.0.0-20230726070402-0bc6b1ebb086/go.mod h1:sUZYe2zisM/YdugBsNWSy7PQXdBUZJRgtEZmuXPEGjo=
-gitee.com/baixudong/re v0.0.0-20230726070429-e1a623b3c133 h1:Njw1L3hNGf4XfawcB2lxXh1OrUX97xaG73E2Vfi2ws4=
-gitee.com/baixudong/re v0.0.0-20230726070429-e1a623b3c133/go.mod h1:S4uYhj3mGBHIPtEOpn8LUnJORg1tQffQ3lBNDlRuCVA=
-gitee.com/baixudong/tools v0.0.0-20230726070525-d80da902e36d h1:VRcXpB5vDZRgInmP5GSKqXvJfN5IIhuX81Rs86DCeDg=
-gitee.com/baixudong/tools v0.0.0-20230726070525-d80da902e36d/go.mod h1:/Y/aJQ2tjkTFVt9GR0HbeZyWhRMrIwbNk9SA0+DjO1I=
+gitee.com/baixudong/kinds v0.0.0-20230809033013-c3d6d3479f8c h1:MZewpjU0+82TcA+nHrcAbbgZhTCqVH2I5zwYBWJ4v54=
+gitee.com/baixudong/kinds v0.0.0-20230809033013-c3d6d3479f8c/go.mod h1:J3r4FWnZOMgk7/1EWEEDaPQnx5uH4OLCRzpTOyKg5cA=
+gitee.com/baixudong/re v0.0.0-20230809033040-360c1d945e59 h1:HtdoUzBIqepeVTeeZ0QcPKoQSDqgWQn/fs84fsByJv0=
+gitee.com/baixudong/re v0.0.0-20230809033040-360c1d945e59/go.mod h1:i5L3z/q42lHZvd3JSk3390XdujEY2QHXFMEcaO/uZD0=
+gitee.com/baixudong/tools v0.0.0-20230813075850-b9539354fc2f h1:F664bHYnnIg/FR3Q/ccIlTSmiUmM+cTq2nGolHp/PCc=
+gitee.com/baixudong/tools v0.0.0-20230813075850-b9539354fc2f/go.mod h1:fjRoueqYHR8gY6CXylit1DhRX+CEVb8VX33nCTHfhX8=
 github.com/andybalholm/brotli v1.0.5 h1:8uQZIdzKmjc/iuPu7O2ioW48L81FgatrcpfFmiq/cCs=
 github.com/andybalholm/brotli v1.0.5/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=

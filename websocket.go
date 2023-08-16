@@ -248,7 +248,6 @@ func NewClientConn(resp *http.Response, options ...Option) (*Conn, error) {
 	} else {
 		option = GetHeaderOption(resp.Header, true)
 	}
-
 	rwc, ok := resp.Body.(interface{ Conn() net.Conn })
 	if !ok {
 		rwc2, ok := resp.Body.(io.ReadWriteCloser)
