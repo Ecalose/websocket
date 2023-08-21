@@ -3,8 +3,8 @@ module gitee.com/baixudong/websocket
 go 1.21.0
 
 require (
-	gitee.com/baixudong/tools v0.0.0-20230813075850-b9539354fc2f
-	golang.org/x/exp v0.0.0-20230811145659-89c5cff77bcb
+	gitee.com/baixudong/tools v0.0.0-20230817082053-97c88f6d0fbc
+	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63
 	nhooyr.io/websocket v1.8.7
 )
 
