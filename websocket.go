@@ -21,11 +21,24 @@ import (
 	"nhooyr.io/websocket/wsjson"
 )
 
+func selectSubprotocol(r *http.Request, subprotocols []string) string {
+	for _, protocols := range r.Header.Values("Sec-WebSocket-Protocol") {
+		for _, protocol := range strings.Split(protocols, ",") {
+			protocol = strings.TrimSpace(protocol)
+			if len(subprotocols) == 0 || slices.Index(subprotocols, protocol) != -1 {
+				return protocol
+			}
+		}
+	}
+	return ""
+}
+
+type CompressionOptions = compressionOptions
+
 type compressionOptions struct {
 	clientNoContextTakeover bool
 	serverNoContextTakeover bool
 }
-type CompressionOptions = compressionOptions
 type connConfig struct {
 	subprotocol    string
 	rwc            io.ReadWriteCloser
@@ -46,18 +59,6 @@ func getBufioReader(r io.Reader) *bufio.Reader
 //go:linkname getBufioWriter nhooyr.io/websocket.getBufioWriter
 func getBufioWriter(w io.Writer) *bufio.Writer
 
-func selectSubprotocol(r *http.Request, subprotocols []string) string {
-	for _, protocols := range r.Header.Values("Sec-WebSocket-Protocol") {
-		for _, protocol := range strings.Split(protocols, ",") {
-			protocol = strings.TrimSpace(protocol)
-			if len(subprotocols) == 0 || slices.Index(subprotocols, protocol) != -1 {
-				return protocol
-			}
-		}
-	}
-	return ""
-}
-
 type Conn struct {
 	rwc    io.ReadWriteCloser
 	conn   *websocket.Conn
@@ -70,9 +71,29 @@ type Option struct {
 	CompressionOptions   *compressionOptions
 }
 
-func (obj *Option) Init(client bool) {
+func NewConn(conn io.ReadWriteCloser, isClient bool, option Option) *Conn {
+	option.init(isClient)
+	var subprotocol string
+	if len(option.Subprotocols) > 0 {
+		subprotocol = option.Subprotocols[0]
+	}
+	return &Conn{
+		rwc:    conn,
+		option: option,
+		conn: newConn(connConfig{
+			subprotocol:    subprotocol,
+			rwc:            conn,
+			client:         isClient,
+			copts:          option.CompressionOptions,
+			flateThreshold: option.CompressionThreshold,
+			br:             getBufioReader(conn),
+			bw:             getBufioWriter(conn),
+		}),
+	}
+}
+func (obj *Option) init(isclient bool) {
 	if obj.CompressionOptions != nil {
-		if client {
+		if isclient {
 			if obj.CompressionOptions.clientNoContextTakeover {
 				obj.CompressionMode = CompressionNoContextTakeover
 			} else {
@@ -139,13 +160,8 @@ func secWebSocketKey() string {
 	return tools.Base64Encode(b)
 }
 
-func SetClientHeaders(headers http.Header, options ...Option) {
-	var option Option
-	if len(options) > 0 {
-		option = options[0]
-	} else {
-		option.Init(true)
-	}
+func SetClientHeadersOption(headers http.Header, option Option) {
+	option.init(true)
 	if headers.Get("Connection") == "" {
 		headers.Set("Connection", "Upgrade")
 	}
@@ -178,7 +194,7 @@ func SetClientHeaders(headers http.Header, options ...Option) {
 	}
 }
 
-func GetHeaderOption(header http.Header, client bool) Option {
+func GetHeaderOption(header http.Header, isClient bool) Option {
 	var copts *compressionOptions
 	for _, extentsions := range header.Values("Sec-WebSocket-Extensions") {
 		if strings.Contains(extentsions, "permessage-deflate") {
@@ -195,7 +211,7 @@ func GetHeaderOption(header http.Header, client bool) Option {
 	var model CompressionMode
 	if copts == nil {
 		model = CompressionDisabled
-	} else if client {
+	} else if isClient {
 		if copts.clientNoContextTakeover {
 			model = CompressionNoContextTakeover
 		} else {
@@ -215,58 +231,15 @@ func GetHeaderOption(header http.Header, client bool) Option {
 	}
 }
 
-func NewConn(conn io.ReadWriteCloser, client bool, options ...Option) *Conn {
-	var option Option
-	if len(options) > 0 {
-		option = options[0]
-	} else {
-		option.Init(client)
+func NewClientConn(resp *http.Response) (*Conn, error) {
+	if rwc, ok := resp.Body.(interface{ Conn() net.Conn }); ok {
+		return NewConn(rwc.Conn(), true, GetHeaderOption(resp.Header, true)), nil
 	}
-	var subprotocol string
-	if len(option.Subprotocols) > 0 {
-		subprotocol = option.Subprotocols[0]
-	}
-	return &Conn{
-		rwc:    conn,
-		option: option,
-		conn: newConn(connConfig{
-			subprotocol:    subprotocol,
-			rwc:            conn,
-			client:         client,
-			copts:          option.CompressionOptions,
-			flateThreshold: option.CompressionThreshold,
-			br:             getBufioReader(conn),
-			bw:             getBufioWriter(conn),
-		}),
-	}
-}
-func NewClientConn(resp *http.Response, options ...Option) (*Conn, error) {
-	var option Option
-	if len(options) > 0 {
-		option = options[0]
-		option.Init(true)
-	} else {
-		option = GetHeaderOption(resp.Header, true)
-	}
-	rwc, ok := resp.Body.(interface{ Conn() net.Conn })
-	if !ok {
-		rwc2, ok := resp.Body.(io.ReadWriteCloser)
-		if !ok {
-			return nil, fmt.Errorf("websocket new client 错误：response body is not a io.ReadWriteCloser")
-		}
-		return NewConn(rwc2, true, option), nil
-	}
-	return NewConn(rwc.Conn(), true, option), nil
+	return nil, fmt.Errorf("websocket new client 错误：response body is not a net.Conn")
 }
 
-func NewServerConn(w http.ResponseWriter, r *http.Request, options ...Option) (_ *Conn, err error) {
-	var option Option
-	if len(options) > 0 {
-		option = options[0]
-		option.Init(false)
-	} else {
-		option = GetHeaderOption(r.Header, false)
-	}
+func NewServerConn(w http.ResponseWriter, r *http.Request) (_ *Conn, err error) {
+	option := GetHeaderOption(r.Header, false)
 	hj, ok := w.(http.Hijacker)
 	if !ok {
 		http.Error(w, http.StatusText(http.StatusNotImplemented), http.StatusNotImplemented)
@@ -312,7 +285,6 @@ func NewServerConn(w http.ResponseWriter, r *http.Request, options ...Option) (_
 		}),
 	}, nil
 }
-
 func (obj *Conn) SetReadLimit(n int64) {
 	obj.conn.SetReadLimit(n)
 }
