@@ -15,6 +15,7 @@ import (
 
 	_ "unsafe"
 
+	"gitee.com/baixudong/bson"
 	"gitee.com/baixudong/tools"
 	"golang.org/x/exp/slices"
 	"nhooyr.io/websocket"
@@ -335,11 +336,11 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 	case string:
 		return obj.conn.Write(ctx, typ, tools.StringToBytes(val))
 	default:
-		jsonData, err := tools.Any2json(p)
+		con, err := bson.Encode(p)
 		if err != nil {
 			return err
 		}
-		return obj.conn.Write(ctx, typ, tools.StringToBytes(jsonData.Raw))
+		return obj.conn.Write(ctx, typ, con)
 	}
 }
 func (obj *Conn) Close(reasons ...string) error {

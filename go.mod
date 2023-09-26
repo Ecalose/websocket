@@ -1,9 +1,10 @@
 module gitee.com/baixudong/websocket
 
-go 1.21.0
+go 1.21.1
 
 require (
-	gitee.com/baixudong/tools v0.0.0-20230922095023-8c8b9efaee0a
+	gitee.com/baixudong/bson v0.0.0-20230926055331-1f714a0c27cc
+	gitee.com/baixudong/tools v0.0.0-20230926010219-77f29cbf5935
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	nhooyr.io/websocket v1.8.7
 )
@@ -28,6 +29,7 @@ require (
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
+	go.mongodb.org/mongo-driver v1.12.1 // indirect
 	golang.org/x/arch v0.5.0 // indirect
 	golang.org/x/image v0.12.0 // indirect
 	golang.org/x/net v0.15.0 // indirect
