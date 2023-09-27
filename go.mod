@@ -3,7 +3,7 @@ module gitee.com/baixudong/websocket
 go 1.21.1
 
 require (
-	gitee.com/baixudong/gson v0.0.0-20230927012642-1a9793aacd4a
+	gitee.com/baixudong/gson v0.0.0-20230927054719-a259dd672035
 	gitee.com/baixudong/tools v0.0.0-20230926010219-77f29cbf5935
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	nhooyr.io/websocket v1.8.7
@@ -16,6 +16,7 @@ require (
 	github.com/bytedance/sonic v1.10.1 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/go-playground/validator/v10 v10.15.4 // indirect
+	github.com/gobwas/ws v1.2.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/uuid v1.3.1 // indirect
