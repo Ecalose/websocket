@@ -3,7 +3,7 @@ module gitee.com/baixudong/websocket
 go 1.21.1
 
 require (
-	gitee.com/baixudong/bson v0.0.0-20230926055331-1f714a0c27cc
+	gitee.com/baixudong/gson v0.0.0-20230927012642-1a9793aacd4a
 	gitee.com/baixudong/tools v0.0.0-20230926010219-77f29cbf5935
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	nhooyr.io/websocket v1.8.7

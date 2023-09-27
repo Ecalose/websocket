@@ -15,7 +15,7 @@ import (
 
 	_ "unsafe"
 
-	"gitee.com/baixudong/bson"
+	"gitee.com/baixudong/gson"
 	"gitee.com/baixudong/tools"
 	"golang.org/x/exp/slices"
 	"nhooyr.io/websocket"
@@ -336,7 +336,7 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 	case string:
 		return obj.conn.Write(ctx, typ, tools.StringToBytes(val))
 	default:
-		con, err := bson.Encode(p)
+		con, err := gson.Encode(p)
 		if err != nil {
 			return err
 		}
