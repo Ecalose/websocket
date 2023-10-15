@@ -15,8 +15,8 @@ import (
 
 	_ "unsafe"
 
-	"gitee.com/baixudong/gson"
-	"gitee.com/baixudong/tools"
+	"github.com/gospider007/gson"
+	"github.com/gospider007/tools"
 	"golang.org/x/exp/slices"
 	"nhooyr.io/websocket"
 	"nhooyr.io/websocket/wsjson"
