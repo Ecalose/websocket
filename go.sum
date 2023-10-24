@@ -10,6 +10,8 @@ github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeN
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
 github.com/gospider007/gson v0.0.0-20231015042048-4fae1418931b h1:Gd5tOuEAlrs+5IWE/Q7WmJFmNmWA+tarN1MZe1G4oPw=
 github.com/gospider007/gson v0.0.0-20231015042048-4fae1418931b/go.mod h1:frJXgZBXIUJlfsIB7LrEGEIU2SeQu7xP/1xs/Tphlwg=
+github.com/gospider007/gson v0.0.0-20231024075507-4e4f682704e6 h1:P9hlyT+L1Ae4HIxRtlPahpCrsdUDWPlhWL9OExWzAfw=
+github.com/gospider007/gson v0.0.0-20231024075507-4e4f682704e6/go.mod h1:8CJ5eDQBzhCtArlT6iHA+1TromaaD/N7tag0FuDB1k0=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94 h1:K2XYy6B6M62o35KMabuzl9DmA4WQftanUgKomb2YYU4=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94/go.mod h1:5e4rIpZmhwqOLVVRZa0uZFAuMPH15dO0qqzKf1s3IgI=
 github.com/gospider007/re v0.0.0-20231015023348-717c984874af h1:bYip5he4jUPslsEY3GtBndUUJppR84Ml9areZ/wG0Hk=

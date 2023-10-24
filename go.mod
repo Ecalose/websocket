@@ -1,9 +1,9 @@
 module github.com/gospider007/websocket
 
-go 1.21.1
+go 1.21.3
 
 require (
-	github.com/gospider007/gson v0.0.0-20231015042048-4fae1418931b
+	github.com/gospider007/gson v0.0.0-20231024075507-4e4f682704e6
 	github.com/gospider007/tools v0.0.0-20231015122431-2acd695704d6
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
 	nhooyr.io/websocket v1.8.9
