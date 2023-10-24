@@ -3,7 +3,7 @@ module github.com/gospider007/websocket
 go 1.21.3
 
 require (
-	github.com/gospider007/gson v0.0.0-20231024075507-4e4f682704e6
+	github.com/gospider007/gson v0.0.0-20231024092648-c97546a0287d
 	github.com/gospider007/tools v0.0.0-20231015122431-2acd695704d6
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
 	nhooyr.io/websocket v1.8.9
@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
-	github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94 // indirect
+	github.com/gospider007/kinds v0.0.0-20231024093643-7a4424f2d30e // indirect
 	github.com/gospider007/re v0.0.0-20231015023348-717c984874af // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
