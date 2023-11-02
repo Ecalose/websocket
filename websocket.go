@@ -343,13 +343,8 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 		return obj.conn.Write(ctx, typ, con)
 	}
 }
-func (obj *Conn) Close(reasons ...string) error {
-	var reason string
-	if len(reasons) > 0 {
-		reason = reasons[0]
-	}
-	defer obj.rwc.Close()
-	return obj.conn.Close(websocket.StatusInternalError, reason)
+func (obj *Conn) Close() error {
+	return obj.conn.CloseNow()
 }
 func (obj *Conn) Ping(ctx context.Context) error {
 	if ctx == nil {
