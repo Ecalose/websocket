@@ -54,13 +54,9 @@ type connConfig struct {
 //go:linkname newConn nhooyr.io/websocket.newConn
 func newConn(cfg connConfig) *websocket.Conn
 
-//go:linkname getBufioReader nhooyr.io/websocket.getBufioReader
-func getBufioReader(r io.Reader) *bufio.Reader
-
-//go:linkname getBufioWriter nhooyr.io/websocket.getBufioWriter
-func getBufioWriter(w io.Writer) *bufio.Writer
-
 type Conn struct {
+	response *http.Response
+
 	rwc    io.ReadWriteCloser
 	conn   *websocket.Conn
 	option Option
@@ -87,8 +83,8 @@ func NewConn(conn io.ReadWriteCloser, isClient bool, option Option) *Conn {
 			client:         isClient,
 			copts:          option.CompressionOptions,
 			flateThreshold: option.CompressionThreshold,
-			br:             getBufioReader(conn),
-			bw:             getBufioWriter(conn),
+			br:             bufio.NewReader(conn),
+			bw:             bufio.NewWriter(conn),
 		}),
 	}
 }
@@ -234,7 +230,9 @@ func GetHeaderOption(header http.Header, isClient bool) Option {
 
 func NewClientConn(resp *http.Response) (*Conn, error) {
 	if rwc, ok := resp.Body.(interface{ Conn() net.Conn }); ok {
-		return NewConn(rwc.Conn(), true, GetHeaderOption(resp.Header, true)), nil
+		conn := NewConn(rwc.Conn(), true, GetHeaderOption(resp.Header, true))
+		conn.response = resp
+		return conn, nil
 	}
 	return nil, fmt.Errorf("websocket new client 错误：response body is not a net.Conn")
 }
@@ -343,8 +341,12 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 		return obj.conn.Write(ctx, typ, con)
 	}
 }
-func (obj *Conn) Close() error {
-	return obj.conn.CloseNow()
+func (obj *Conn) Close() {
+	// obj.conn.Close(websocket.StatusNormalClosure, "")
+	obj.conn.CloseNow()
+	if obj.response != nil {
+		obj.response.Body.Close()
+	}
 }
 func (obj *Conn) Ping(ctx context.Context) error {
 	if ctx == nil {
