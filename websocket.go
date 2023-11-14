@@ -55,11 +55,10 @@ type connConfig struct {
 func newConn(cfg connConfig) *websocket.Conn
 
 type Conn struct {
-	response *http.Response
-
-	rwc    io.ReadWriteCloser
-	conn   *websocket.Conn
-	option Option
+	closeFunc func()
+	rwc       io.ReadWriteCloser
+	conn      *websocket.Conn
+	option    Option
 }
 type Option struct {
 	Subprotocols         []string        // Subprotocols lists the WebSocket subprotocols to negotiate with the server.
@@ -228,10 +227,10 @@ func GetHeaderOption(header http.Header, isClient bool) Option {
 	}
 }
 
-func NewClientConn(resp *http.Response) (*Conn, error) {
+func NewClientConn(resp *http.Response, closeFunc func()) (*Conn, error) {
 	if rwc, ok := resp.Body.(interface{ Conn() net.Conn }); ok {
 		conn := NewConn(rwc.Conn(), true, GetHeaderOption(resp.Header, true))
-		conn.response = resp
+		conn.closeFunc = closeFunc
 		return conn, nil
 	}
 	return nil, fmt.Errorf("websocket new client 错误：response body is not a net.Conn")
@@ -341,11 +340,12 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 		return obj.conn.Write(ctx, typ, con)
 	}
 }
-func (obj *Conn) Close() {
-	obj.conn.CloseNow()
-	if obj.response != nil {
-		obj.response.Body.Close()
+func (obj *Conn) Close() (err error) {
+	err = obj.conn.CloseNow()
+	if obj.closeFunc != nil {
+		obj.closeFunc()
 	}
+	return
 }
 func (obj *Conn) Ping(ctx context.Context) error {
 	if ctx == nil {

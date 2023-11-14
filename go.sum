@@ -14,6 +14,8 @@ github.com/gospider007/gson v0.0.0-20231024092648-c97546a0287d h1:3+FOSLWmVEq3er
 github.com/gospider007/gson v0.0.0-20231024092648-c97546a0287d/go.mod h1:8CJ5eDQBzhCtArlT6iHA+1TromaaD/N7tag0FuDB1k0=
 github.com/gospider007/gson v0.0.0-20231110081735-fa6816715498 h1:NDZlnVcLScXmCeS4a7kugrNUWzioVBDX/kdcGURxcj8=
 github.com/gospider007/gson v0.0.0-20231110081735-fa6816715498/go.mod h1:r8uL+sPUwP8+6n8GZFa2iz2bJe0qNS6EKwkqmiZhHqI=
+github.com/gospider007/gson v0.0.0-20231114084834-650b26cdd864 h1:san+x97YVi5o580y/0e64mrs2b7JkG7dGlsS4+bjw44=
+github.com/gospider007/gson v0.0.0-20231114084834-650b26cdd864/go.mod h1:r8uL+sPUwP8+6n8GZFa2iz2bJe0qNS6EKwkqmiZhHqI=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94 h1:K2XYy6B6M62o35KMabuzl9DmA4WQftanUgKomb2YYU4=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94/go.mod h1:5e4rIpZmhwqOLVVRZa0uZFAuMPH15dO0qqzKf1s3IgI=
 github.com/gospider007/kinds v0.0.0-20231024093643-7a4424f2d30e h1:lmX6IQKkrNDbXfHsvrv1Uz0MoG2v5+4VC6Gdh9irUNY=
