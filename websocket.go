@@ -342,7 +342,6 @@ func (obj *Conn) Send(ctx context.Context, typ MessageType, p any) error {
 	}
 }
 func (obj *Conn) Close() {
-	// obj.conn.Close(websocket.StatusNormalClosure, "")
 	obj.conn.CloseNow()
 	if obj.response != nil {
 		obj.response.Body.Close()

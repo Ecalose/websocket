@@ -3,9 +3,9 @@ module github.com/gospider007/websocket
 go 1.21.3
 
 require (
-	github.com/gospider007/gson v0.0.0-20231024092648-c97546a0287d
-	github.com/gospider007/tools v0.0.0-20231024115950-be51fa815fcd
-	golang.org/x/exp v0.0.0-20231006140011-7918f672742d
+	github.com/gospider007/gson v0.0.0-20231110081735-fa6816715498
+	github.com/gospider007/tools v0.0.0-20231110011734-c2a4739ea0a0
+	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 	nhooyr.io/websocket v1.8.10
 )
 
@@ -19,9 +19,9 @@ require (
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
-	go.mongodb.org/mongo-driver v1.12.1 // indirect
-	golang.org/x/image v0.13.0 // indirect
-	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	go.mongodb.org/mongo-driver v1.13.0 // indirect
+	golang.org/x/image v0.14.0 // indirect
+	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
