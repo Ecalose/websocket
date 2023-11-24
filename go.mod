@@ -3,8 +3,8 @@ module github.com/gospider007/websocket
 go 1.21.3
 
 require (
-	github.com/gospider007/gson v0.0.0-20231114084834-650b26cdd864
-	github.com/gospider007/tools v0.0.0-20231110011734-c2a4739ea0a0
+	github.com/gospider007/gson v0.0.0-20231119141525-66095080057d
+	github.com/gospider007/tools v0.0.0-20231122021245-1cafbac3ef46
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
 	nhooyr.io/websocket v1.8.10
 )

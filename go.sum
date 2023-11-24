@@ -16,6 +16,8 @@ github.com/gospider007/gson v0.0.0-20231110081735-fa6816715498 h1:NDZlnVcLScXmCe
 github.com/gospider007/gson v0.0.0-20231110081735-fa6816715498/go.mod h1:r8uL+sPUwP8+6n8GZFa2iz2bJe0qNS6EKwkqmiZhHqI=
 github.com/gospider007/gson v0.0.0-20231114084834-650b26cdd864 h1:san+x97YVi5o580y/0e64mrs2b7JkG7dGlsS4+bjw44=
 github.com/gospider007/gson v0.0.0-20231114084834-650b26cdd864/go.mod h1:r8uL+sPUwP8+6n8GZFa2iz2bJe0qNS6EKwkqmiZhHqI=
+github.com/gospider007/gson v0.0.0-20231119141525-66095080057d h1:K9IbMHY2dZfi1ddJWL7a+KkZe6apIYaXN1cD8lDRH5I=
+github.com/gospider007/gson v0.0.0-20231119141525-66095080057d/go.mod h1:r8uL+sPUwP8+6n8GZFa2iz2bJe0qNS6EKwkqmiZhHqI=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94 h1:K2XYy6B6M62o35KMabuzl9DmA4WQftanUgKomb2YYU4=
 github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94/go.mod h1:5e4rIpZmhwqOLVVRZa0uZFAuMPH15dO0qqzKf1s3IgI=
 github.com/gospider007/kinds v0.0.0-20231024093643-7a4424f2d30e h1:lmX6IQKkrNDbXfHsvrv1Uz0MoG2v5+4VC6Gdh9irUNY=
@@ -30,6 +32,8 @@ github.com/gospider007/tools v0.0.0-20231024115950-be51fa815fcd h1:UH2D7tgAmzr9g
 github.com/gospider007/tools v0.0.0-20231024115950-be51fa815fcd/go.mod h1:U7MVsYWYQPXIOfXja0g/OK7rG67QIRypXfD+VPsQeiw=
 github.com/gospider007/tools v0.0.0-20231110011734-c2a4739ea0a0 h1:/MfNCUJW9rfx0LsOy/rAWwp1dDZujOocuIks5KNysOk=
 github.com/gospider007/tools v0.0.0-20231110011734-c2a4739ea0a0/go.mod h1:myK4kDqDx4TlplDVnfYMI7Xi5VUbFZ3fxwAh2Cwm7ks=
+github.com/gospider007/tools v0.0.0-20231122021245-1cafbac3ef46 h1:vskdS8WLAveNSDHsAAdwiD+LBLMHq3AND1nGnVydwfM=
+github.com/gospider007/tools v0.0.0-20231122021245-1cafbac3ef46/go.mod h1:myK4kDqDx4TlplDVnfYMI7Xi5VUbFZ3fxwAh2Cwm7ks=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
