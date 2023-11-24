@@ -19,7 +19,6 @@ import (
 	"github.com/gospider007/tools"
 	"golang.org/x/exp/slices"
 	"nhooyr.io/websocket"
-	"nhooyr.io/websocket/wsjson"
 )
 
 func selectSubprotocol(r *http.Request, subprotocols []string) string {
@@ -296,19 +295,6 @@ func (obj *Conn) Rwc() io.ReadWriteCloser {
 }
 func (obj *Conn) Option() Option {
 	return obj.option
-}
-
-func (obj *Conn) RecvJson(ctx context.Context, v any) error {
-	if ctx == nil {
-		ctx = context.TODO()
-	}
-	return wsjson.Read(ctx, obj.conn, v)
-}
-func (obj *Conn) SendJson(ctx context.Context, v any) error {
-	if ctx == nil {
-		ctx = context.TODO()
-	}
-	return wsjson.Write(ctx, obj.conn, v)
 }
 func (obj *Conn) Read(p []byte) (n int, err error) {
 	return obj.rwc.Read(p)
