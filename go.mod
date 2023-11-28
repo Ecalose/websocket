@@ -5,7 +5,7 @@ go 1.21.3
 require (
 	github.com/gospider007/gson v0.0.0-20231119141525-66095080057d
 	github.com/gospider007/tools v0.0.0-20231122021245-1cafbac3ef46
-	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
+	golang.org/x/exp v0.0.0-20231127185646-65229373498e
 	nhooyr.io/websocket v1.8.10
 )
 
@@ -21,7 +21,7 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	go.mongodb.org/mongo-driver v1.13.0 // indirect
 	golang.org/x/image v0.14.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
+	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net"
 	"strings"
 
 	"net/http"
@@ -226,13 +225,10 @@ func GetHeaderOption(header http.Header, isClient bool) Option {
 	}
 }
 
-func NewClientConn(resp *http.Response, closeFunc func()) (*Conn, error) {
-	if rwc, ok := resp.Body.(interface{ Conn() net.Conn }); ok {
-		conn := NewConn(rwc.Conn(), true, GetHeaderOption(resp.Header, true))
-		conn.closeFunc = closeFunc
-		return conn, nil
-	}
-	return nil, fmt.Errorf("websocket new client 错误：response body is not a net.Conn")
+func NewClientConn(rwc io.ReadWriteCloser, header http.Header, closeFunc func()) (*Conn, error) {
+	conn := NewConn(rwc, true, GetHeaderOption(header, true))
+	conn.closeFunc = closeFunc
+	return conn, nil
 }
 
 func NewServerConn(w http.ResponseWriter, r *http.Request) (_ *Conn, err error) {
