@@ -5,7 +5,7 @@ go 1.21.3
 require (
 	github.com/gospider007/gson v0.0.0-20231119141525-66095080057d
 	github.com/gospider007/tools v0.0.0-20231202084937-8b2bc66f8198
-	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611
+	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
 	nhooyr.io/websocket v1.8.10
 )
 
