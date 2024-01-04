@@ -3,9 +3,9 @@ module github.com/gospider007/websocket
 go 1.21.3
 
 require (
-	github.com/gospider007/gson v0.0.0-20231119141525-66095080057d
+	github.com/gospider007/gson v0.0.0-20231215083934-e7762897c4db
 	github.com/gospider007/tools v0.0.0-20231202084937-8b2bc66f8198
-	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b
+	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc
 	nhooyr.io/websocket v1.8.10
 )
 
