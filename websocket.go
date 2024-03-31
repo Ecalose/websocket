@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"sync"
 
 	"github.com/gospider007/gson"
 	"github.com/gospider007/tools"
@@ -72,9 +73,13 @@ func NewServerConn(conn net.Conn, option Option) *Conn {
 type Conn struct {
 	conn   *websocket.Conn
 	rawCon net.Conn
+	rlock  sync.Mutex
+	lock   sync.Mutex
 }
 
 func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
+	obj.rlock.Lock()
+	defer obj.rlock.Unlock()
 	mesg, con, err := obj.conn.ReadMessage()
 	return MessageType(mesg), con, err
 }
@@ -85,6 +90,8 @@ func (obj *Conn) Close() error {
 }
 
 func (obj *Conn) WriteMessage(messageType MessageType, p any) error {
+	obj.lock.Lock()
+	defer obj.lock.Unlock()
 	switch val := p.(type) {
 	case []byte:
 		return obj.conn.WriteMessage(int(messageType), val)
