@@ -45,7 +45,6 @@ func TestPreparedMessage(t *testing.T) {
 		if tt.enableWriteCompression {
 			c.newCompressionWriter = compressNoContextTakeover
 		}
-
 		if err := c.SetCompressionLevel(tt.compressionLevel); err != nil {
 			t.Fatal(err)
 		}
@@ -76,7 +75,7 @@ func TestPreparedMessage(t *testing.T) {
 		got := buf.String()
 
 		if got != want {
-			t.Errorf("write message != prepared message, got %#v, want %#v", got, want)
+			t.Errorf("write message != prepared message for %+v", tt)
 		}
 	}
 }
