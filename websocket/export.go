@@ -28,6 +28,7 @@ func SetClientHeadersOption(headers http.Header, option Option) {
 		headers.Set("Sec-WebSocket-Extensions", "permessage-deflate; server_no_context_takeover; client_no_context_takeover")
 	}
 }
+
 func GetResponseHeaderOption(header http.Header) Option {
 	var option Option
 	option.Subprotocol = header.Get("Sec-Websocket-Protocol")

@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 	"sync"
+	"time"
 
 	"github.com/gospider007/gson"
 	"github.com/gospider007/tools"
@@ -70,6 +71,34 @@ func NewServerConn(conn net.Conn, option Option) *Conn {
 	}
 }
 
+type UpgradeOption struct {
+	HandshakeTimeout                time.Duration
+	ReadBufferSize, WriteBufferSize int
+	Subprotocols                    []string
+	Error                           func(w http.ResponseWriter, r *http.Request, status int, reason error)
+	CheckOrigin                     func(r *http.Request) bool
+	EnableCompression               bool
+}
+
+func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeader http.Header, option UpgradeOption) *Conn {
+	up := websocket.Upgrader{
+		HandshakeTimeout:  option.HandshakeTimeout,
+		ReadBufferSize:    option.ReadBufferSize,
+		WriteBufferSize:   option.WriteBufferSize,
+		Subprotocols:      option.Subprotocols,
+		Error:             option.Error,
+		CheckOrigin:       option.CheckOrigin,
+		EnableCompression: option.EnableCompression,
+	}
+	con, err := up.Upgrade(w, r, responseHeader)
+	if err != nil {
+		return nil
+	}
+	return &Conn{
+		conn: con,
+	}
+}
+
 type Conn struct {
 	conn   *websocket.Conn
 	rawCon net.Conn
@@ -85,7 +114,9 @@ func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
 }
 func (obj *Conn) Close() error {
 	err := obj.conn.Close()
-	obj.rawCon.Close()
+	if obj.rawCon != nil {
+		obj.rawCon.Close()
+	}
 	return err
 }
 
