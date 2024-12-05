@@ -80,7 +80,11 @@ type UpgradeOption struct {
 	EnableCompression               bool
 }
 
-func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeader http.Header, option UpgradeOption) *Conn {
+func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeader http.Header, options ...UpgradeOption) (*Conn, error) {
+	var option UpgradeOption
+	if len(options) > 0 {
+		option = options[0]
+	}
 	up := websocket.Upgrader{
 		HandshakeTimeout:  option.HandshakeTimeout,
 		ReadBufferSize:    option.ReadBufferSize,
@@ -91,12 +95,7 @@ func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeade
 		EnableCompression: option.EnableCompression,
 	}
 	con, err := up.Upgrade(w, r, responseHeader)
-	if err != nil {
-		return nil
-	}
-	return &Conn{
-		conn: con,
-	}
+	return &Conn{conn: con}, err
 }
 
 type Conn struct {
