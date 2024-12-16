@@ -66,8 +66,9 @@ func NewClientConn(conn net.Conn, option Option) *Conn {
 func NewServerConn(conn net.Conn, option Option) *Conn {
 	con := websocket.NewServerConn(conn, websocket.Option(option))
 	return &Conn{
-		conn:   con,
-		rawCon: conn,
+		conn:     con,
+		rawCon:   conn,
+		IsServer: true,
 	}
 }
 
@@ -95,14 +96,15 @@ func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeade
 		EnableCompression: option.EnableCompression,
 	}
 	con, err := up.Upgrade(w, r, responseHeader)
-	return &Conn{conn: con}, err
+	return &Conn{conn: con, IsServer: true}, err
 }
 
 type Conn struct {
-	conn   *websocket.Conn
-	rawCon net.Conn
-	rlock  sync.Mutex
-	lock   sync.Mutex
+	conn     *websocket.Conn
+	rawCon   net.Conn
+	rlock    sync.Mutex
+	lock     sync.Mutex
+	IsServer bool
 }
 
 func (obj *Conn) ReadMessage() (MessageType, []byte, error) {

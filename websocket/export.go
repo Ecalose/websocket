@@ -4,6 +4,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"strings"
 )
 
 type Option struct {
@@ -33,18 +34,24 @@ func GetResponseHeaderOption(header http.Header) Option {
 	var option Option
 	option.Subprotocol = header.Get("Sec-Websocket-Protocol")
 	for _, ext := range parseExtensions(header) {
-		if ext[""] != "permessage-deflate" {
-			continue
+		if strings.Contains(ext[""], "permessage-deflate") {
+			option.NewCompressionWriter = compressNoContextTakeover
+			option.NewDecompressionReader = decompressNoContextTakeover
+			option.EnableCompression = true
+			break
 		}
-		_, snct := ext["server_no_context_takeover"]
-		_, cnct := ext["client_no_context_takeover"]
-		if !snct || !cnct {
-			return option
-		}
-		option.NewCompressionWriter = compressNoContextTakeover
-		option.NewDecompressionReader = decompressNoContextTakeover
-		option.EnableCompression = true
-		break
+		// if ext[""] != "permessage-deflate" {
+		// 	continue
+		// }
+		// _, snct := ext["server_no_context_takeover"]
+		// _, cnct := ext["client_no_context_takeover"]
+		// if !snct || !cnct {
+		// 	return option
+		// }
+		// option.NewCompressionWriter = compressNoContextTakeover
+		// option.NewDecompressionReader = decompressNoContextTakeover
+		// option.EnableCompression = true
+		// break
 	}
 	return option
 }
