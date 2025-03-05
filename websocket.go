@@ -1,139 +1,303 @@
 package websocket
 
 import (
+	"compress/flate"
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
 	"io"
 	"net"
 	"net/http"
-	"sync"
-	"time"
+	"strconv"
+	"strings"
 
+	"github.com/gobwas/ws"
+	"github.com/gobwas/ws/wsflate"
 	"github.com/gospider007/gson"
-	"github.com/gospider007/tools"
-	"github.com/gospider007/websocket/websocket"
+	"github.com/gospider007/re"
 )
 
-type MessageType int
-
-const (
-	// TextMessage denotes a text data message. The text message payload is
-	// interpreted as UTF-8 encoded text data.
-	TextMessage MessageType = 1
-
-	// BinaryMessage denotes a binary data message.
-	BinaryMessage MessageType = 2
-
-	// CloseMessage denotes a close control message. The optional message
-	// payload contains a numeric code and text. Use the FormatCloseMessage
-	// function to format a close message payload.
-	CloseMessage MessageType = 8
-
-	// PingMessage denotes a ping control message. The optional message payload
-	// is UTF-8 encoded text.
-	PingMessage MessageType = 9
-
-	// PongMessage denotes a pong control message. The optional message payload
-	// is UTF-8 encoded text.
-	PongMessage MessageType = 10
-)
-
+type MessageType byte
 type Option struct {
-	Subprotocol            string
-	EnableCompression      bool
-	ReadBufferSize         int
-	WriteBufferSize        int
-	NewCompressionWriter   func(io.WriteCloser, int) io.WriteCloser
-	NewDecompressionReader func(io.Reader) io.ReadCloser
+	EnableCompression bool
 }
 
 func SetClientHeadersWithOption(headers http.Header, option Option) {
-	websocket.SetClientHeadersOption(headers, websocket.Option(option))
-}
-
-func GetResponseHeaderOption(header http.Header) Option {
-	return Option(websocket.GetResponseHeaderOption(header))
-}
-func GetRequestHeaderOption(header http.Header) Option {
-	return Option(websocket.GetRequestHeaderOption(header))
-}
-
-func NewClientConn(conn net.Conn, option Option) *Conn {
-	con := websocket.NewClientConn(conn, websocket.Option(option))
-	return &Conn{
-		conn:   con,
-		rawCon: conn,
+	p := make([]byte, 16)
+	io.ReadFull(rand.Reader, p)
+	headers.Set("Upgrade", "websocket")
+	headers.Set("Connection", "Upgrade")
+	headers.Set("Sec-WebSocket-Key", base64.StdEncoding.EncodeToString(p))
+	headers.Set("Sec-WebSocket-Version", "13")
+	if option.EnableCompression {
+		headers.Set("Sec-WebSocket-Extensions", "permessage-deflate; server_no_context_takeover; client_no_context_takeover")
 	}
-}
-func NewServerConn(conn net.Conn, option Option) *Conn {
-	con := websocket.NewServerConn(conn, websocket.Option(option))
-	return &Conn{
-		conn:     con,
-		rawCon:   conn,
-		IsServer: true,
-	}
-}
-
-type UpgradeOption struct {
-	HandshakeTimeout                time.Duration
-	ReadBufferSize, WriteBufferSize int
-	Subprotocols                    []string
-	Error                           func(w http.ResponseWriter, r *http.Request, status int, reason error)
-	CheckOrigin                     func(r *http.Request) bool
-	EnableCompression               bool
-}
-
-func NewServerConnWithHTTP(w http.ResponseWriter, r *http.Request, responseHeader http.Header, options ...UpgradeOption) (*Conn, error) {
-	var option UpgradeOption
-	if len(options) > 0 {
-		option = options[0]
-	}
-	up := websocket.Upgrader{
-		HandshakeTimeout:  option.HandshakeTimeout,
-		ReadBufferSize:    option.ReadBufferSize,
-		WriteBufferSize:   option.WriteBufferSize,
-		Subprotocols:      option.Subprotocols,
-		Error:             option.Error,
-		CheckOrigin:       option.CheckOrigin,
-		EnableCompression: option.EnableCompression,
-	}
-	con, err := up.Upgrade(w, r, responseHeader)
-	return &Conn{conn: con, IsServer: true}, err
 }
 
 type Conn struct {
-	conn     *websocket.Conn
-	rawCon   net.Conn
-	rlock    sync.Mutex
-	lock     sync.Mutex
-	IsServer bool
+	conn                net.Conn
+	bit                 int
+	isClient            bool
+	maxLength           int
+	helper              wsflate.Helper
+	compressorContext   *writer
+	decompressorContext *reader
 }
+
+const (
+	ContinuationMessage MessageType = 0x0
+	TextMessage         MessageType = 0x1
+	BinaryMessage       MessageType = 0x2
+	CloseMessage        MessageType = 0x8
+	PingMessage         MessageType = 0x9
+	PongMessage         MessageType = 0xa
+)
 
 func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
-	obj.rlock.Lock()
-	defer obj.rlock.Unlock()
-	mesg, con, err := obj.conn.ReadMessage()
-	return MessageType(mesg), con, err
-}
-func (obj *Conn) Close() error {
-	err := obj.conn.Close()
-	if obj.rawCon != nil {
-		obj.rawCon.Close()
+	var lastFrame *ws.Frame
+	for {
+		frame, err := ws.ReadFrame(obj.conn)
+		if err != nil {
+			return 0, nil, err
+		}
+		if frame.Header.Masked {
+			frame = ws.UnmaskFrameInPlace(frame)
+		}
+		if frame.Header.Fin && lastFrame == nil {
+			if ok, err := wsflate.IsCompressed(frame.Header); ok && err == nil {
+				if frame, err = obj.helper.DecompressFrame(frame); err != nil {
+					return 0, nil, err
+				}
+			}
+			return MessageType(frame.Header.OpCode), frame.Payload, nil
+		}
+		switch frame.Header.OpCode {
+		case ws.OpContinuation:
+			if lastFrame == nil {
+				return 0, nil, errors.New("invalid message")
+			}
+			lastFrame.Header.Fin = frame.Header.Fin
+			lastFrame.Payload = append(lastFrame.Payload, frame.Payload...)
+		case ws.OpText, ws.OpBinary:
+			if lastFrame != nil {
+				return 0, nil, errors.New("invalid message")
+			}
+			lastFrame = &frame
+		default:
+			return 0, nil, errors.New("invalid message")
+		}
+		if lastFrame.Header.Fin {
+			if ok, err := wsflate.IsCompressed(lastFrame.Header); ok && err == nil {
+				if *lastFrame, err = obj.helper.DecompressFrame(*lastFrame); err != nil {
+					return 0, nil, err
+				}
+			}
+			return MessageType(lastFrame.Header.OpCode), lastFrame.Payload, nil
+		}
 	}
-	return err
 }
 
-func (obj *Conn) WriteMessage(messageType MessageType, p any) error {
-	obj.lock.Lock()
-	defer obj.lock.Unlock()
-	switch val := p.(type) {
-	case []byte:
-		return obj.conn.WriteMessage(int(messageType), val)
-	case string:
-		return obj.conn.WriteMessage(int(messageType), tools.StringToBytes(val))
-	default:
-		con, err := gson.Encode(p)
+func (obj *Conn) newFrame(messageType MessageType, fin bool, p []byte) (frame ws.Frame, err error) {
+	frame = ws.NewFrame(ws.OpCode(messageType), fin, p)
+	if obj.helper.Compressor != nil {
+		frame, err = obj.helper.CompressFrame(frame)
+	}
+	return
+}
+func (obj *Conn) writeFrame(messageType MessageType, p []byte) (err error) {
+	frame, err := obj.newFrame(messageType, true, p)
+	if err != nil {
+		return err
+	}
+	if obj.maxLength <= 0 || int(frame.Header.Length) <= obj.maxLength {
+		if obj.isClient {
+			frame = ws.MaskFrameInPlace(frame)
+		}
+		return ws.WriteFrame(obj.conn, frame)
+	} else {
+		p = frame.Payload[obj.maxLength:]
+		err = obj.writeMeta(messageType, false, frame.Payload[:obj.maxLength])
 		if err != nil {
 			return err
 		}
-		return obj.conn.WriteMessage(int(messageType), con)
 	}
+	for {
+		if len(p) <= obj.maxLength {
+			return obj.writeMeta(ContinuationMessage, true, p)
+		} else {
+			err = obj.writeMeta(ContinuationMessage, false, p[:obj.maxLength])
+			if err != nil {
+				return err
+			}
+			p = p[obj.maxLength:]
+		}
+	}
+}
+func (obj *Conn) writeMeta(messageType MessageType, fin bool, data []byte) (err error) {
+	frame := ws.NewFrame(ws.OpCode(messageType), fin, data)
+	if obj.isClient {
+		frame = ws.MaskFrameInPlace(frame)
+	}
+	return ws.WriteFrame(obj.conn, frame)
+}
+
+func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
+	data, err := gson.Encode(value)
+	if err != nil {
+		return err
+	}
+	return obj.writeFrame(messageType, data)
+}
+func (obj *Conn) Close() error {
+	return obj.conn.Close()
+}
+func NewConn(conn net.Conn, isClient bool, Extension string) *Conn {
+	con := Conn{conn: conn, isClient: isClient}
+	con.helper.Decompressor = con.decompressor
+	if strings.Contains(Extension, "permessage-deflate") {
+		con.helper.Compressor = con.compressor
+	}
+	if isClient && strings.Contains(Extension, "client_no_context_takeover") {
+		con.helper.Compressor = func(w io.Writer) wsflate.Compressor {
+			f, _ := flate.NewWriter(w, flate.BestCompression)
+			return f
+		}
+		con.helper.Decompressor = func(r io.Reader) wsflate.Decompressor {
+			f := flate.NewReader(r)
+			return f
+		}
+	}
+	if !isClient && strings.Contains(Extension, "server_no_context_takeover") {
+		con.helper.Compressor = func(w io.Writer) wsflate.Compressor {
+			f, _ := flate.NewWriter(w, flate.BestCompression)
+			return f
+		}
+		con.helper.Decompressor = func(r io.Reader) wsflate.Decompressor {
+			f := flate.NewReader(r)
+			return f
+		}
+	}
+	if bitRs := re.Search(`client_max_window_bits=(\d+)`, Extension); bitRs != nil {
+		con.bit, _ = strconv.Atoi(bitRs.Group(1))
+	} else if bitRs := re.Search(`server_max_window_bits=(\d+)`, Extension); bitRs != nil {
+		con.bit, _ = strconv.Atoi(bitRs.Group(1))
+	}
+	return &con
+}
+
+type reader struct {
+	r    io.ReadCloser
+	dict []byte
+	l    int
+}
+
+func (obj *reader) updateDict(p []byte) {
+	if len(p) == 0 {
+		return
+	}
+	pL := len(p)
+	if pL >= obj.l {
+		obj.dict = p[pL-obj.l:]
+		return
+	}
+	dictL := len(obj.dict)
+	yL := dictL + pL
+	if yL > obj.l {
+		obj.dict = obj.dict[yL-obj.l:]
+	}
+	obj.dict = append(obj.dict, p...)
+}
+func (obj *reader) Read(p []byte) (n int, err error) {
+	n, err = obj.r.Read(p)
+	if err == nil && n > 0 {
+		obj.updateDict(p[:n])
+	}
+	return n, err
+}
+func (obj *reader) Reset(r io.Reader) {
+	obj.r.(flate.Resetter).Reset(r, obj.dict)
+}
+
+func (obj *Conn) newReader(r io.Reader) *reader {
+	bit := 15
+	if obj.bit > 0 {
+		bit = obj.bit
+	}
+	return &reader{
+		l:    1 << uint(bit),
+		dict: []byte{},
+		r:    flate.NewReader(r),
+	}
+}
+
+type writer struct {
+	w    *flate.Writer
+	dict []byte
+	l    int
+}
+
+func (obj *writer) updateDict(p []byte) {
+	if len(p) == 0 {
+		return
+	}
+	pL := len(p)
+	if pL >= obj.l {
+		obj.dict = p[pL-obj.l:]
+		return
+	}
+	dictL := len(obj.dict)
+	yL := dictL + pL
+	if yL > obj.l {
+		obj.dict = obj.dict[yL-obj.l:]
+	}
+	obj.dict = append(obj.dict, p...)
+}
+func (obj *writer) Write(p []byte) (n int, err error) {
+	n, err = obj.w.Write(p)
+	if err == nil && n > 0 {
+		obj.updateDict(p[:n])
+	}
+	return n, err
+}
+func (obj *writer) Flush() error {
+	return obj.w.Flush()
+}
+func (obj *writer) Reset(w io.Writer) {
+	obj.w.Close()
+	fw, _ := flate.NewWriterDict(w, flate.BestCompression, obj.dict)
+	obj.w = fw
+}
+
+func (obj *Conn) newWriter(w io.Writer) *writer {
+	bit := 15
+	if obj.bit > 0 {
+		bit = obj.bit
+	}
+	fw, _ := flate.NewWriterDict(w, flate.BestCompression, nil)
+	return &writer{
+		l:    1 << uint(bit),
+		dict: []byte{},
+		w:    fw,
+	}
+}
+
+func (obj *Conn) decompressor(r io.Reader) wsflate.Decompressor {
+	if obj.decompressorContext == nil {
+		obj.decompressorContext = obj.newReader(r)
+	} else {
+		obj.decompressorContext.Reset(r)
+	}
+	return obj.decompressorContext
+}
+func (obj *Conn) compressor(w io.Writer) wsflate.Compressor {
+	if obj.compressorContext == nil {
+		obj.compressorContext = obj.newWriter(w)
+	} else {
+		obj.compressorContext.Reset(w)
+	}
+	return obj.compressorContext
+}
+
+func (obj *Conn) IsClient() bool {
+	return obj.isClient
 }
