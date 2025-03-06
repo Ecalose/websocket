@@ -30,7 +30,7 @@ func SetClientHeadersWithOption(headers http.Header, option Option) {
 	headers.Set("Sec-WebSocket-Key", base64.StdEncoding.EncodeToString(p))
 	headers.Set("Sec-WebSocket-Version", "13")
 	if option.EnableCompression {
-		headers.Set("Sec-WebSocket-Extensions", "permessage-deflate; server_no_context_takeover; client_no_context_takeover")
+		headers.Set("Sec-WebSocket-Extensions", "permessage-deflate; client_max_window_bits")
 	}
 }
 
@@ -61,7 +61,7 @@ func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
 			return 0, nil, err
 		}
 		if frame.Header.Masked {
-			frame = ws.UnmaskFrameInPlace(frame)
+			frame = ws.UnmaskFrame(frame)
 		}
 		if frame.Header.Fin && lastFrame == nil {
 			if ok, err := wsflate.IsCompressed(frame.Header); ok && err == nil {
@@ -97,21 +97,28 @@ func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
 	}
 }
 
-func (obj *Conn) newFrame(messageType MessageType, fin bool, p []byte) (frame ws.Frame, err error) {
-	frame = ws.NewFrame(ws.OpCode(messageType), fin, p)
-	if obj.helper.Compressor != nil {
-		frame, err = obj.helper.CompressFrame(frame)
+func (obj *Conn) writeMeta(messageType MessageType, fin bool, data []byte) (err error) {
+	frame := ws.NewFrame(ws.OpCode(messageType), fin, data)
+	if obj.isClient {
+		frame = ws.MaskFrame(frame)
 	}
-	return
+	return ws.WriteFrame(obj.conn, frame)
 }
-func (obj *Conn) writeFrame(messageType MessageType, p []byte) (err error) {
-	frame, err := obj.newFrame(messageType, true, p)
+
+func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
+	p, err := gson.Encode(value)
 	if err != nil {
 		return err
 	}
-	if obj.maxLength <= 0 || int(frame.Header.Length) <= obj.maxLength {
+	frame := ws.NewFrame(ws.OpCode(messageType), true, p)
+	if obj.helper.Compressor != nil {
+		if frame, err = obj.helper.CompressFrame(frame); err != nil {
+			return err
+		}
+	}
+	if obj.maxLength <= 0 || frame.Header.Length <= int64(obj.maxLength) {
 		if obj.isClient {
-			frame = ws.MaskFrameInPlace(frame)
+			frame = ws.MaskFrame(frame)
 		}
 		return ws.WriteFrame(obj.conn, frame)
 	} else {
@@ -132,21 +139,6 @@ func (obj *Conn) writeFrame(messageType MessageType, p []byte) (err error) {
 			p = p[obj.maxLength:]
 		}
 	}
-}
-func (obj *Conn) writeMeta(messageType MessageType, fin bool, data []byte) (err error) {
-	frame := ws.NewFrame(ws.OpCode(messageType), fin, data)
-	if obj.isClient {
-		frame = ws.MaskFrameInPlace(frame)
-	}
-	return ws.WriteFrame(obj.conn, frame)
-}
-
-func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
-	data, err := gson.Encode(value)
-	if err != nil {
-		return err
-	}
-	return obj.writeFrame(messageType, data)
 }
 func (obj *Conn) Close() error {
 	return obj.conn.Close()
