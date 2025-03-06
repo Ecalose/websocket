@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"bytes"
 	"compress/flate"
 	"crypto/rand"
 	"encoding/base64"
@@ -179,7 +180,7 @@ func NewConn(conn net.Conn, isClient bool, Extension string) *Conn {
 
 type reader struct {
 	r    io.ReadCloser
-	dict []byte
+	dict *bytes.Buffer
 	l    int
 }
 
@@ -189,25 +190,22 @@ func (obj *reader) updateDict(p []byte) {
 	}
 	pL := len(p)
 	if pL >= obj.l {
-		obj.dict = p[pL-obj.l:]
-		return
+		obj.dict.Reset()
+		p = p[pL-obj.l:]
+	} else if yL := obj.dict.Len() + pL; yL > obj.l {
+		obj.dict.Next(yL - obj.l)
 	}
-	dictL := len(obj.dict)
-	yL := dictL + pL
-	if yL > obj.l {
-		obj.dict = obj.dict[yL-obj.l:]
-	}
-	obj.dict = append(obj.dict, p...)
+	obj.dict.Write(p)
 }
 func (obj *reader) Read(p []byte) (n int, err error) {
 	n, err = obj.r.Read(p)
-	if err == nil && n > 0 {
+	if n > 0 {
 		obj.updateDict(p[:n])
 	}
 	return n, err
 }
 func (obj *reader) Reset(r io.Reader) {
-	obj.r.(flate.Resetter).Reset(r, obj.dict)
+	obj.r.(flate.Resetter).Reset(r, obj.dict.Bytes())
 }
 
 func (obj *Conn) newReader(r io.Reader) *reader {
@@ -217,14 +215,14 @@ func (obj *Conn) newReader(r io.Reader) *reader {
 	}
 	return &reader{
 		l:    1 << uint(bit),
-		dict: []byte{},
+		dict: bytes.NewBuffer(nil),
 		r:    flate.NewReader(r),
 	}
 }
 
 type writer struct {
 	w    *flate.Writer
-	dict []byte
+	dict *bytes.Buffer
 	l    int
 }
 
@@ -234,19 +232,16 @@ func (obj *writer) updateDict(p []byte) {
 	}
 	pL := len(p)
 	if pL >= obj.l {
-		obj.dict = p[pL-obj.l:]
-		return
+		obj.dict.Reset()
+		p = p[pL-obj.l:]
+	} else if yL := obj.dict.Len() + pL; yL > obj.l {
+		obj.dict.Next(yL - obj.l)
 	}
-	dictL := len(obj.dict)
-	yL := dictL + pL
-	if yL > obj.l {
-		obj.dict = obj.dict[yL-obj.l:]
-	}
-	obj.dict = append(obj.dict, p...)
+	obj.dict.Write(p)
 }
 func (obj *writer) Write(p []byte) (n int, err error) {
 	n, err = obj.w.Write(p)
-	if err == nil && n > 0 {
+	if n > 0 {
 		obj.updateDict(p[:n])
 	}
 	return n, err
@@ -256,7 +251,7 @@ func (obj *writer) Flush() error {
 }
 func (obj *writer) Reset(w io.Writer) {
 	obj.w.Close()
-	fw, _ := flate.NewWriterDict(w, flate.BestCompression, obj.dict)
+	fw, _ := flate.NewWriterDict(w, flate.BestCompression, obj.dict.Bytes())
 	obj.w = fw
 }
 
@@ -268,7 +263,7 @@ func (obj *Conn) newWriter(w io.Writer) *writer {
 	fw, _ := flate.NewWriterDict(w, flate.BestCompression, nil)
 	return &writer{
 		l:    1 << uint(bit),
-		dict: []byte{},
+		dict: bytes.NewBuffer(nil),
 		w:    fw,
 	}
 }
