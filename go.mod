@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	github.com/STARRY-S/zip v0.2.2 // indirect
+	github.com/STARRY-S/zip v0.2.3 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/bodgit/plumbing v1.3.0 // indirect
 	github.com/bodgit/sevenzip v1.6.0 // indirect
@@ -17,6 +17,7 @@ require (
 	github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/gospider007/kinds v0.0.0-20250217075226-10f199f7215d // indirect
 	github.com/gospider007/tools v0.0.0-20250303064300-be5181433b18 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -25,7 +26,8 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
-	github.com/mholt/archives v0.1.0 // indirect
+	github.com/mholt/archives v0.1.1 // indirect
+	github.com/minio/minlz v1.0.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/nwaples/rardecode/v2 v2.1.1 // indirect
@@ -39,7 +41,7 @@ require (
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	go.mongodb.org/mongo-driver v1.17.3 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
-	golang.org/x/image v0.25.0 // indirect
-	golang.org/x/net v0.38.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/image v0.26.0 // indirect
+	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 )
