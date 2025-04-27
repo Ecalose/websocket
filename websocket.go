@@ -20,7 +20,7 @@ import (
 
 type MessageType byte
 type Option struct {
-	EnableCompression bool
+	DisCompression bool
 }
 
 func SetClientHeadersWithOption(headers http.Header, option Option) {
@@ -30,7 +30,7 @@ func SetClientHeadersWithOption(headers http.Header, option Option) {
 	headers.Set("Connection", "Upgrade")
 	headers.Set("Sec-WebSocket-Key", base64.StdEncoding.EncodeToString(p))
 	headers.Set("Sec-WebSocket-Version", "13")
-	if option.EnableCompression {
+	if !option.DisCompression {
 		headers.Set("Sec-WebSocket-Extensions", "permessage-deflate; client_max_window_bits")
 	}
 }
