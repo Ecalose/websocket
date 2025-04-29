@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsflate"
@@ -43,6 +44,8 @@ type Conn struct {
 	helper              wsflate.Helper
 	compressorContext   *writer
 	decompressorContext *reader
+	readLock            sync.Mutex
+	writeLock           sync.Mutex
 }
 
 const (
@@ -55,6 +58,8 @@ const (
 )
 
 func (obj *Conn) ReadMessage() (MessageType, []byte, error) {
+	obj.readLock.Lock()
+	defer obj.readLock.Unlock()
 	var lastFrame *ws.Frame
 	for {
 		frame, err := ws.ReadFrame(obj.conn)
@@ -107,6 +112,8 @@ func (obj *Conn) writeMeta(messageType MessageType, fin bool, data []byte) (err 
 }
 
 func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
+	obj.writeLock.Lock()
+	defer obj.writeLock.Unlock()
 	p, err := gson.Encode(value)
 	if err != nil {
 		return err
