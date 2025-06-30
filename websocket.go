@@ -7,7 +7,6 @@ import (
 	"encoding/base64"
 	"errors"
 	"io"
-	"net"
 	"net/http"
 	"strconv"
 	"strings"
@@ -37,7 +36,8 @@ func SetClientHeadersWithOption(headers http.Header, option Option) {
 }
 
 type Conn struct {
-	conn                net.Conn
+	conn                io.ReadWriteCloser
+	closeFunc           func()
 	bit                 int
 	isClient            bool
 	maxLength           int
@@ -149,10 +149,13 @@ func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
 	}
 }
 func (obj *Conn) Close() error {
+	if obj.closeFunc != nil {
+		obj.closeFunc()
+	}
 	return obj.conn.Close()
 }
-func NewConn(conn net.Conn, isClient bool, Extension string) *Conn {
-	con := Conn{conn: conn, isClient: isClient}
+func NewConn(conn io.ReadWriteCloser, closeFunc func(), isClient bool, Extension string) *Conn {
+	con := Conn{conn: conn, isClient: isClient, closeFunc: closeFunc}
 	con.helper.Decompressor = con.decompressor
 	if strings.Contains(Extension, "permessage-deflate") {
 		con.helper.Compressor = con.compressor
