@@ -23,7 +23,7 @@ type Option struct {
 	DisCompression bool
 }
 
-func SetClientHeadersWithOption(headers http.Header, option Option) {
+func SetClientHeadersWithOption(headers http.Header, option *Option) {
 	p := make([]byte, 16)
 	io.ReadFull(rand.Reader, p)
 	headers.Set("Upgrade", "websocket")

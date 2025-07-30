@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/gobwas/ws v1.4.0
-	github.com/gospider007/gson v0.0.0-20250630120534-cce6e3c6756d
+	github.com/gospider007/gson v0.0.0-20250718004537-ff15820964bd
 	github.com/gospider007/re v0.0.0-20250217075352-bcb79f285d6c
 )
 
@@ -18,7 +18,7 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gospider007/kinds v0.0.0-20250217075226-10f199f7215d // indirect
-	github.com/gospider007/tools v0.0.0-20250711035142-241d6041da43 // indirect
+	github.com/gospider007/tools v0.0.0-20250718003809-7c62cd0ee920 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
