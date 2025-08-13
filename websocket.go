@@ -39,7 +39,6 @@ func SetClientHeadersWithOption(headers http.Header, option *Option) {
 
 type Conn struct {
 	conn                io.ReadWriteCloser
-	closeFunc           func()
 	bit                 int
 	isClient            bool
 	maxLength           int
@@ -151,13 +150,10 @@ func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
 	}
 }
 func (obj *Conn) Close() error {
-	if obj.closeFunc != nil {
-		obj.closeFunc()
-	}
 	return obj.conn.Close()
 }
-func NewConn(conn io.ReadWriteCloser, closeFunc func(), isClient bool, Extension string) *Conn {
-	con := Conn{conn: conn, isClient: isClient, closeFunc: closeFunc}
+func NewConn(conn io.ReadWriteCloser, isClient bool, Extension string) *Conn {
+	con := Conn{conn: conn, isClient: isClient}
 	con.helper.Decompressor = con.decompressor
 	if strings.Contains(Extension, "permessage-deflate") {
 		con.helper.Compressor = con.compressor

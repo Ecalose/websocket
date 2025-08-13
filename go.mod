@@ -18,7 +18,7 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gospider007/kinds v0.0.0-20250217075226-10f199f7215d // indirect
-	github.com/gospider007/tools v0.0.0-20250730001814-2c13a4717064 // indirect
+	github.com/gospider007/tools v0.0.0-20250811070046-82a1a8f96823 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
@@ -39,7 +39,7 @@ require (
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	go.mongodb.org/mongo-driver v1.17.4 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
-	golang.org/x/image v0.29.0 // indirect
-	golang.org/x/net v0.42.0 // indirect
-	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/image v0.30.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 )
