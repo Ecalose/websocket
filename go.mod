@@ -1,6 +1,6 @@
 module github.com/gospider007/websocket
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/gobwas/ws v1.4.0
