@@ -4,8 +4,8 @@ go 1.25
 
 require (
 	github.com/gobwas/ws v1.4.0
-	github.com/gospider007/gson v0.0.0-20250718004537-ff15820964bd
-	github.com/gospider007/re v0.0.0-20250217075352-bcb79f285d6c
+	github.com/gospider007/gson v0.0.0-20250815030832-fa016f03a353
+	github.com/gospider007/re v0.0.0-20250815031101-a57caeff73bf
 )
 
 require (
@@ -17,8 +17,8 @@ require (
 	github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
-	github.com/gospider007/kinds v0.0.0-20250217075226-10f199f7215d // indirect
-	github.com/gospider007/tools v0.0.0-20250811070046-82a1a8f96823 // indirect
+	github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c // indirect
+	github.com/gospider007/tools v0.0.0-20250815031258-8a81d680917c // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
