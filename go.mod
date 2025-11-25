@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	github.com/gobwas/ws v1.4.0
-	github.com/gospider007/gson v0.0.0-20251010080854-7673cfe49eb5
+	github.com/gospider007/gson v0.0.0-20251121002236-81e4612c0dcd
 	github.com/gospider007/re v0.0.0-20250815031101-a57caeff73bf
 )
 
@@ -14,9 +14,9 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c // indirect
-	github.com/gospider007/tools v0.0.0-20251010080832-0e5c6b21df2d // indirect
+	github.com/gospider007/tools v0.0.0-20251125071203-f60847ba60e8 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.18.0 // indirect
+	github.com/klauspost/compress v1.18.1 // indirect
 	github.com/minio/minlz v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // indirect
@@ -24,9 +24,9 @@ require (
 	github.com/tidwall/match v1.2.0 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
-	go.mongodb.org/mongo-driver v1.17.4 // indirect
-	golang.org/x/image v0.32.0 // indirect
-	golang.org/x/net v0.46.0 // indirect
-	golang.org/x/text v0.30.0 // indirect
+	go.mongodb.org/mongo-driver v1.17.6 // indirect
+	golang.org/x/image v0.33.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/text v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
