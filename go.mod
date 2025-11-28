@@ -14,7 +14,7 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c // indirect
-	github.com/gospider007/tools v0.0.0-20251125071203-f60847ba60e8 // indirect
+	github.com/gospider007/tools v0.0.0-20251128142908-5c87784b1dd2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.1 // indirect
 	github.com/minio/minlz v1.0.1 // indirect
