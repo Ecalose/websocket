@@ -15,8 +15,8 @@ github.com/golang/snappy v1.0.0/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEW
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
 github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/gospider007/gson v0.0.0-20251203071726-dfbdfaa3e014 h1:xR4A/xjcZySR5MoY6tCdEyD7sb1ihZv8zgAxCLh4q3A=
-github.com/gospider007/gson v0.0.0-20251203071726-dfbdfaa3e014/go.mod h1:yHaYb2MeYxxuCr/Bq4kMQAfd6m74mATLC1Aw3NB3T9Q=
+github.com/gospider007/gson v0.0.0-20251203140815-d868519e276d h1:dSYYP6rPvRmpz7V7ztAMH2Z0I2vGZiFttHl/cl8Bd8U=
+github.com/gospider007/gson v0.0.0-20251203140815-d868519e276d/go.mod h1:oVRhpyFf1I1ReThkxIbcqdyK/svcVdQMUWOTpe7ry90=
 github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c h1:WnFZf0v+Du5nH/R3pq5QwkTcfVxLqVMRp2dPaI6w6YY=
 github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c/go.mod h1:8eAmhxyW7p81nsYlD5Wj8I0HuZpVGci+Q9wr6vfY8pg=
 github.com/gospider007/re v0.0.0-20250815031101-a57caeff73bf h1:+3g9qmg+XLbYcY4vvbsDM7xHkXF+5U8V/haAYDImGTA=
