@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/gobwas/ws v1.4.0
-	github.com/gospider007/gson v0.0.0-20260211061031-d25b95c02bea
+	github.com/gospider007/gson v0.0.0-20260211061115-d2749fe6a54b
 	github.com/gospider007/re v0.0.0-20251212071142-f56bce921150
 )
 
