@@ -4,7 +4,7 @@ go 1.25
 
 require (
 	github.com/gobwas/ws v1.4.0
-	github.com/gospider007/gson v0.0.0-20260203092532-eb7c0c57f649
+	github.com/gospider007/gson v0.0.0-20260211034740-2b56c5b61820
 	github.com/gospider007/re v0.0.0-20251212071142-f56bce921150
 )
 
@@ -14,7 +14,7 @@ require (
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c // indirect
-	github.com/gospider007/tools v0.0.0-20260120074453-dbd9d4748c8a // indirect
+	github.com/gospider007/tools v0.0.0-20260211034738-21b52f47811e // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.4 // indirect
 	github.com/minio/minlz v1.0.1 // indirect
