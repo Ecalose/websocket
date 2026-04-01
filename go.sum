@@ -15,8 +15,8 @@ github.com/golang/snappy v1.0.0/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEW
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
 github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/gospider007/gson v0.0.0-20260401032817-7be57418cfee h1:nskjLKgKzjLh10P7pzRHPhnz7vRFqF70R8ixVx9T6vI=
-github.com/gospider007/gson v0.0.0-20260401032817-7be57418cfee/go.mod h1:xjwt/wA1GX+R3i1OGBOvSoRxEgSm2RbWYCu98y40dQk=
+github.com/gospider007/gson v0.0.0-20260401033039-c3b755100cc6 h1:hId9B/60cJMlmyadNbmu6pFhtIYEdqj2ugSFXqGSZJE=
+github.com/gospider007/gson v0.0.0-20260401033039-c3b755100cc6/go.mod h1:disB+igiYLahrgV1U0xyEVktiLjOQH0k2ZukpYTgskI=
 github.com/gospider007/kinds v0.0.0-20260211060834-06a10e2431d8 h1:EivYaFLOylV33Q5aRkF/cwkisOkDVDWLJ5CXfHYz5mU=
 github.com/gospider007/kinds v0.0.0-20260211060834-06a10e2431d8/go.mod h1:+DxImhsKjwFWM5qTeuWSsh6q6Rax+H0fN3QcuoJZos8=
 github.com/gospider007/re v0.0.0-20260227072205-6223d82a3dab h1:LEp9NN4EMV9GuTWnXRN4eiiUAjpCEq2Z4HpVgTQx0JY=
