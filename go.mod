@@ -25,8 +25,8 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
 	go.mongodb.org/mongo-driver v1.17.9 // indirect
-	golang.org/x/image v0.38.0 // indirect
-	golang.org/x/net v0.52.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/image v0.39.0 // indirect
+	golang.org/x/net v0.53.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
