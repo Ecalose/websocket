@@ -16,6 +16,7 @@ import (
 	"github.com/gobwas/ws/wsflate"
 	"github.com/gospider007/gson"
 	"github.com/gospider007/re"
+	"github.com/gospider007/tools"
 )
 
 type MessageType byte
@@ -115,9 +116,18 @@ func (obj *Conn) writeMeta(messageType MessageType, fin bool, data []byte) (err 
 func (obj *Conn) WriteMessage(messageType MessageType, value any) error {
 	obj.writeLock.Lock()
 	defer obj.writeLock.Unlock()
-	p, err := gson.Encode(value)
-	if err != nil {
-		return err
+	var p []byte
+	var err error
+	switch vv := value.(type) {
+	case []byte:
+		p = vv
+	case string:
+		p = tools.StringToBytes(vv)
+	default:
+		p, err = gson.Encode(value)
+		if err != nil {
+			return err
+		}
 	}
 	frame := ws.NewFrame(ws.OpCode(messageType), true, p)
 	if obj.helper.Compressor != nil {
