@@ -26,7 +26,7 @@ require (
 	github.com/tidwall/sjson v1.2.5 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.9.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
-	golang.org/x/image v0.45.0 // indirect
-	golang.org/x/net v0.58.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
+	golang.org/x/image v0.46.0 // indirect
+	golang.org/x/net v0.59.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
 )
